@@ -1,0 +1,47 @@
+{
+  "name": "@gf-apis/sessions-api",
+  "version": "0.2.0",
+  "description": "Opinionated sessions API for Google Functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gf-apis/sessions-api.git"
+  },
+  "author": "Panayotis Procopiou <gfapis@pauloddr.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gf-apis/sessions-api/issues"
+  },
+  "homepage": "https://github.com/gf-apis/sessions-api#readme",
+  "dependencies": {
+    "@gf-apis/bcrypt-adapter": "github:gf-apis/bcrypt-adapter",
+    "@gf-apis/client-sessions-adapter": "github:gf-apis/client-sessions-adapter",
+    "@gf-apis/core": "github:gf-apis/core",
+    "@gf-apis/datastore-adapter": "github:gf-apis/datastore-adapter"
+  },
+  "devDependencies": {
+    "body-parser": "1.17.1",
+    "chai": "3.5.0",
+    "chai-http": "3.0.0",
+    "express": "4.15.2",
+    "mocha": "3.3.0",
+    "nyc": "10.3.0",
+    "standard": "*"
+  },
+  "nyc": {
+    "include": [
+      "index.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ]
+  },
+  "standard": {
+    "env": "mocha"
+  }
+}
