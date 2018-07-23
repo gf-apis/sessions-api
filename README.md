@@ -10,21 +10,27 @@ It relies on the following dependencies:
 
 ## Usage
 
-Create a new Google HTTP Function with the following code:
+![Google Cloud Function Setup](./images/gcp-create-function-1.png)
+
+1) The name of your Google Cloud Function will also be the endpoint name. So, if you name your function "session", the endpoint served will also be called "session". Name it anything you deem fit.
+
+2) Select HTTP Trigger.
+
+3) In the inline editor, paste the following code:
 
 ```javascript
 const SessionsApi = require('@gf-apis/sessions-api')
 
-const api = new SessionsApi({
-  session: {secret: 'MySecretKey'} // must be set!
-})
+const api = new SessionsApi()
 
 exports.handleRequest = function (req, res) {
   api.handle(req, res)
 }
 ```
 
-Add the library to __package.json__:
+4) Click __package.json__ tab.
+
+5) Paste the following code (ajust name and version to your liking):
 
 ```json
 {
@@ -36,9 +42,15 @@ Add the library to __package.json__:
 }
 ```
 
-Finally, make sure the __entry point__ is correct. In the example above, it should be `handleRequest`.
+6) Set the __Entry Point__ to `handleRequest`. If you want to use another name, make sure to adjust it in your function code (Step 3).
 
-Then, assuming the name of your Google Function is "session", the following endpoints will be served:
+7) Click __More__ to show Advanced Options.
+
+8) Create an __Environment Variable__ called `GFA_SESSION_SECRET` containing the __secret__ used to generate the encrypted session cookie. Without this, the function won't start.
+
+9) Click __Create__ to deploy the function.
+
+After the deploy is finished, the following endpoints will be served (assuming you named your function "session", see Step 1):
 
 * `POST /session` - creates a new session (user sign-in)
 * `GET /session` - returns information about current session
@@ -145,12 +157,11 @@ To change this output, set `session.expose` with an array of field names. `id` i
 
 ```javascript
 const api = new SessionsApi({
-  session: {
-    secret: 'MySecretKey',
-    expose: ['username']
-  }
+  session: {expose: ['username']}
 })
 ```
+
+Or use the `GFA_SESSION_EXPOSE` environment variable, as a comma-separated string of field names.
 
 ### User Sign-Out
 
@@ -190,11 +201,9 @@ Some clients will fire a "preflight request" prior to making the real request to
 
 ## Configuration
 
-Setting environment variables is the preferred way of configuration, as it prevents duplication of settings across different functions.
+Setting __environment variables__ is the preferred way of configuration.
 
-_(Please note that Google Functions do not support environment variables at this time, but [support is on its way](https://issuetracker.google.com/issues/35907643). Meanwhile, alternatives exist, like using [dotenv](https://github.com/motdotla/dotenv) and bundling a git-ignored `.env` file into your deployed function.)_
-
-If not using environment variables, settings can be set upon creating an instance. See defaults below.
+If for some reason you don't want to use environment variables, settings can be set upon creating an instance. See defaults below.
 
 ```javascript
 var authorizer = new Authorizer({
@@ -250,7 +259,11 @@ var authorizer = new Authorizer({
 
 ## Authorizing _other_ Google Functions
 
-Request the `Session` object from this library in your other Google Functions (i.e., API endpoints that require session credentials), replicate the same settings (this is important!), and then call `authorize()` to validate the session:
+1) Request the `Session` object from this library in your other Google Functions (i.e., API endpoints that require session credentials) and create an instance;
+
+2) define all __Environment Variables__ starting with `GFA_SESSION_` (they __must__ match across functions!); then
+
+3) call `authorize()` on the `session` instance to validate it:
 
 ```javascript
 // Note the different class name and require path
@@ -258,10 +271,7 @@ const Session = require('@gf-apis/sessions-api/session')
 
 // Create and configure this object with the same options
 //   as the "session" section of your /sessions function
-const session = new Session({
-  secret: 'MySecretKey',
-  // ... other settings
-})
+const session = new Session()
 
 // Entry Point
 exports.handleRequest = function (req, res) {

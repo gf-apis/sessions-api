@@ -8,7 +8,8 @@ const {SessionsApp} = require('@gf-apis/core/apps/SessionsApp')
 const {SessionsRouter} = require('@gf-apis/core/routers/SessionsRouter')
 
 class SessionsApi extends SessionsApp {
-  constructor (options) {
+  constructor (opts) {
+    var options = opts || {}
     const sessionOptions = delete options.session
     const datastoreOptions = delete options.database
     const sessionAdapter = new ClientSessionsAdapter(sessionOptions)
