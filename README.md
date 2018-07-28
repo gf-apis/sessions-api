@@ -10,7 +10,7 @@ It relies on the following dependencies:
 
 ## Usage
 
-![Google Cloud Function Setup](./images/gcp-create-function-1.png)
+![Google Cloud Function Setup](https://raw.githubusercontent.com/gf-apis/guide/master/images/gcp-create-function-1.png)
 
 1) The name of your Google Cloud Function will also be the endpoint name. So, if you name your function "session", the endpoint served will also be called "session". Name it anything you deem fit.
 
@@ -46,7 +46,7 @@ exports.handleRequest = function (req, res) {
 
 7) Click __More__ to show Advanced Options.
 
-8) Create an __Environment Variable__ called `GFA_SESSION_SECRET` containing the __secret__ used to generate the encrypted session cookie. Without this, the function won't start.
+8) Create an __environment variable__ called `GFA_SESSION_SECRET` containing the __secret__ used to generate the encrypted session cookie. Without this, the function won't start.
 
 9) Click __Create__ to deploy the function.
 
@@ -153,15 +153,13 @@ Reads the session cookie and responds with friendly data.
 
 </table>
 
-To change this output, set `session.expose` with an array of field names. `id` is included by default. Example:
+To change the output of a successful response, set `session.expose` with an array of field names. `id` is included by default. Example:
 
 ```javascript
 const api = new SessionsApi({
   session: {expose: ['username']}
 })
 ```
-
-Or use the `GFA_SESSION_EXPOSE` environment variable, as a comma-separated string of field names.
 
 ### User Sign-Out
 
@@ -201,12 +199,10 @@ Some clients will fire a "preflight request" prior to making the real request to
 
 ## Configuration
 
-Setting __environment variables__ is the preferred way of configuration.
-
-If for some reason you don't want to use environment variables, settings can be set upon creating an instance. See defaults below.
+Settings can be set upon creating an instance. See defaults below.
 
 ```javascript
-var authorizer = new Authorizer({
+var api = new SessionsApi({
 
   // Session management options
   session: {
@@ -215,17 +211,17 @@ var authorizer = new Authorizer({
     secret: process.env['GFA_SESSION_SECRET'],
 
     // name of the session cookie
-    name: process.env['GFA_SESSION_NAME'] || 'userSession',
+    name: 'userSession',
 
     // session expiration in ms
-    duration: +process.env['GFA_SESSION_DURATION'] || (24 * 60 * 60 * 1000),
+    duration: 24 * 60 * 60 * 1000,
 
     // session active duration in ms
-    activeDuration: +process.env['GFA_SESSION_ACTIVE_DURATION'] || (1000 * 60 * 5),
+    activeDuration: 1000 * 60 * 5,
 
     // array of user fields to expose in session object
     // id is already included
-    expose: (process.env['GFA_SESSION_EXPOSE'] || 'username').split(',')
+    expose: []
 
   },
 
@@ -233,18 +229,18 @@ var authorizer = new Authorizer({
   database: {
 
     // Datastore "Kind"
-    table: process.env['GFA_DATABASE_TABLE'] || 'User',
+    table: 'User',
 
     // Datastore namespace
-    namespace: process.env['GFA_DATABASE_NAMESPACE'],
+    namespace: null,
 
     fields: {
 
       // name of the field that is used together with password during sign-in
-      primary: process.env['GFA_DATABASE_FIELDS_PRIMARY'] || 'username',
+      primary: 'username',
 
       // name of the field that stores the password
-      password: process.env['GFA_DATABASE_FIELDS_PASSWORD'] || 'password'
+      password: 'password'
 
     }
 
@@ -259,9 +255,9 @@ var authorizer = new Authorizer({
 
 ## Authorizing _other_ Google Functions
 
-1) Request the `Session` object from this library in your other Google Functions (i.e., API endpoints that require session credentials) and create an instance;
+1) Request the `Session` object from this library in your other Google Functions (i.e., API endpoints that require session credentials) and create an instance with the same options defined in the `session` section of the main session function;
 
-2) define all __Environment Variables__ starting with `GFA_SESSION_` (they __must__ match across functions!); then
+2) define environment variable `GFA_SESSION_SECRET` in your new function with the same value as the main session function;
 
 3) call `authorize()` on the `session` instance to validate it:
 
@@ -271,32 +267,25 @@ const Session = require('@gf-apis/sessions-api/session')
 
 // Create and configure this object with the same options
 //   as the "session" section of your /sessions function
-const session = new Session()
+const session = new Session({/*...*/})
 
 // Entry Point
 exports.handleRequest = function (req, res) {
-  session.authorize(req, res)
-    .then(mainFunction) // session is valid
-    .catch(errorFunction) // session is invalid, or an error ocurred
+  session.authorize(req, res, mainFunction)
 }
 
-function mainFunction (req, res, user) {
-  // your code here; `user` parameter contains session data
-}
-
-function errorFunction (err, req, res) {
-  if (err.message === 'UNAUTHORIZED') {
-    return res.status(401).end()
+function mainFunction (err, req, res, user) {
+  if (err) {
+    if (err.message === 'UNAUTHORIZED') {
+      return res.status(401).end()
+    }
+    // handle other errors
+    return res.status(500).end()
   }
-  // Internal error: log it, then return generic error to user
-  console.error(err)
-  res.status(500).end({code: 'INTERNAL_ERROR'})
+  // rest of your code
+  // `user` parameter contains exposed session data
 }
 ```
-
-If the session is valid, a `user` object will be passed along to your main function. This object will be the same as returned by `GET /session`.
-
-If the session is invalid, you can handle it in a separate function as shown in the example above.
 
 ## License
 
