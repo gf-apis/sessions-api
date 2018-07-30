@@ -12,7 +12,7 @@ It relies on the following dependencies:
 
 ![Google Cloud Function Setup](https://raw.githubusercontent.com/gf-apis/guide/master/images/gcp-create-function-1.png)
 
-1) The name of your Google Cloud Function will also be the endpoint name. So, if you name your function "session", the endpoint served will also be called "session". Name it anything you deem fit.
+1) The name of your Google Cloud Function will also be the endpoint name. So, if you name your function "session", the endpoint served will also be called "session". You can name it anything you like.
 
 2) Select HTTP Trigger.
 
@@ -37,7 +37,7 @@ exports.handleRequest = function (req, res) {
   "name": "your-function",
   "version": "0.0.1",
   "dependencies": {
-    "@gf-apis/sessions-api": "0.1.0"
+    "@gf-apis/sessions-api": "github:gf-apis/sessions-api"
   }
 }
 ```
@@ -46,11 +46,11 @@ exports.handleRequest = function (req, res) {
 
 7) Click __More__ to show Advanced Options.
 
-8) Create an __environment variable__ called `GFA_SESSION_SECRET` containing the __secret__ used to generate the encrypted session cookie. Without this, the function won't start.
+8) Create an __environment variable__ called `GFA_SESSION_SECRET` containing the __secret__ used to generate the encrypted session cookie. __Without this, the function won't start.__
 
 9) Click __Create__ to deploy the function.
 
-After the deploy is finished, the following endpoints will be served (assuming you named your function "session", see Step 1):
+After the deploy is finished, the following endpoints will be served (assuming you named your function "session" in step 1):
 
 * `POST /session` - creates a new session (user sign-in)
 * `GET /session` - returns information about current session
@@ -122,6 +122,36 @@ Successful responses set a cookie in the browser (or client) with the session cr
 
 </table>
 
+Please note that if you use custom field names, __you must use those modified names in the request body__ as well. All responses will also present the custom names.
+
+Example for custom fields named `user` and `pass`:
+
+<table>
+<tr><th>Request Body</th><th>Response</th></tr>
+<tr><td>
+
+```javascript
+// valid credentials
+{
+  "user": "MyUsername",
+  "pass": "abc123"
+}
+```
+
+</td><td>
+
+```javascript
+// statusCode: 201 Created
+{
+  "id": "12345",
+  "user": "MyUsername"
+}
+```
+
+</td></tr>
+
+</table>
+
 ### Current Session Information
 
 * `GET /session`
@@ -153,11 +183,13 @@ Reads the session cookie and responds with friendly data.
 
 </table>
 
-To change the output of a successful response, set `session.expose` with an array of field names. `id` is included by default. Example:
+To add more user fields to the output of a successful response, set `session.expose` with an array of field names. It defaults to the user `id` only.
+
+Setting this option will overwrite the defaults. The example below will remove `id` from responses, keep `username`, and add `createdAt`:
 
 ```javascript
 const api = new SessionsApi({
-  session: {expose: ['username']}
+  session: {expose: ['username', 'createdAt']}
 })
 ```
 
@@ -225,24 +257,19 @@ var api = new SessionsApi({
 
   },
 
-  // Datastore configuration
-  database: {
+  // Datastore "Kind" where user data is stored
+  table: 'User',
 
-    // Datastore "Kind"
-    table: 'User',
+  // Datastore namespace
+  namespace: null,
 
-    // Datastore namespace
-    namespace: null,
+  fields: {
 
-    fields: {
+    // name of the field that is used together with password during sign-in
+    primary: 'username',
 
-      // name of the field that is used together with password during sign-in
-      primary: 'username',
-
-      // name of the field that stores the password
-      password: 'password'
-
-    }
+    // name of the field that stores the password
+    password: 'password'
 
   },
 

@@ -8,7 +8,7 @@ const {emulator, setApp} = require('@gf-apis/core/test/support/emulator')
 
 describe('SessionsApi', function () {
   let app = new SessionsApi({
-    session: {secret: 'test', expose: ['username']}
+    session: {secret: 'test', expose: ['id', 'username']}
   })
   let password = '123987'
   let agent // for cookie support
@@ -19,7 +19,7 @@ describe('SessionsApi', function () {
     agent = chai.request.agent(emulator)
     app.password.generate(null, null, password, (err, _req, _res, hash) => {
       if (err) return done(err)
-      app.database.insert(null, null, 'users', {username: 'abc', password: hash}, (err, _req, _res, id) => {
+      app.database.insert(null, null, 'User', {username: 'abc', password: hash}, (err, _req, _res, id) => {
         user = {id}
         done(err)
       })
@@ -28,7 +28,7 @@ describe('SessionsApi', function () {
 
   after(function (done) {
     agent.app.close()
-    app.database.delete(null, null, 'users', user.id, done)
+    app.database.delete(null, null, 'User', user.id, done)
   })
 
   describe('POST', function () {
@@ -158,8 +158,8 @@ describe('SessionsApi', function () {
       })
 
       it('removes session cookie', function () {
-        return agent.get('/').catch(res => {
-          expect(res).to.have.status(401)
+        return agent.get('/').catch(response => {
+          expect(response).to.have.status(401)
         })
       })
     })

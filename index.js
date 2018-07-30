@@ -20,6 +20,9 @@ class SessionsApi extends SessionsApp {
     options.database = databaseAdapter
     options.password = passwordAdapter
     options.router = router
+    if (!options.table) {
+      options.table = 'User' // Datastore format suggests a capitalized, singular name
+    }
     super(options)
   }
 }
