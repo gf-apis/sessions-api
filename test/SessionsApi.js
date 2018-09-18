@@ -4,7 +4,7 @@ const chai = require('chai')
 const expect = chai.expect
 
 const SessionsApi = require('../')
-const {emulator, setApp} = require('@gf-apis/core/test/support/emulator')
+const {emulator, setApp} = require('@gfa/core/test/support/emulator')
 
 describe('SessionsApi', function () {
   let app = new SessionsApi({

@@ -1,4 +1,7 @@
-# @gf-apis/sessions-api
+# @gfa/sessions-api
+
+[![Build Status](https://travis-ci.com/pauloddr/gfa-sessions-api.svg?branch=master)](https://travis-ci.com/pauloddr/gfa-sessions-api)
+[![Coverage Status](https://coveralls.io/repos/github/pauloddr/gfa-sessions-api/badge.svg?branch=master)](https://coveralls.io/github/pauloddr/gfa-sessions-api?branch=master)
 
 A simple and opinionated session management API for [Google Cloud HTTP Functions](https://cloud.google.com/functions/docs/writing/http).
 
@@ -10,7 +13,9 @@ It relies on the following dependencies:
 
 ## Usage
 
-![Google Cloud Function Setup](https://raw.githubusercontent.com/gf-apis/guide/master/images/gcp-create-function-1.png)
+Create a new __Google Cloud Function__:
+
+![Google Cloud Function Setup](https://raw.githubusercontent.com/pauloddr/gfa-guides/master/images/gcp-create-function-1.png)
 
 1) The name of your Google Cloud Function will also be the endpoint name. So, if you name your function "session", the endpoint served will also be called "session". You can name it anything you like.
 
@@ -19,7 +24,7 @@ It relies on the following dependencies:
 3) In the inline editor, paste the following code:
 
 ```javascript
-const SessionsApi = require('@gf-apis/sessions-api')
+const SessionsApi = require('@gfa/sessions-api')
 
 const api = new SessionsApi()
 
@@ -37,7 +42,7 @@ exports.handleRequest = function (req, res) {
   "name": "your-function",
   "version": "0.0.1",
   "dependencies": {
-    "@gf-apis/sessions-api": "github:gf-apis/sessions-api"
+    "@gfa/sessions-api": "github:pauloddr/gfa-sessions-api"
   }
 }
 ```
@@ -290,7 +295,7 @@ var api = new SessionsApi({
 
 ```javascript
 // Note the different class name and require path
-const Session = require('@gf-apis/sessions-api/session')
+const Session = require('@gfa/sessions-api/session')
 
 // Create and configure this object with the same options
 //   as the "session" section of your /sessions function

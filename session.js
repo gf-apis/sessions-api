@@ -1,3 +1,3 @@
-const ClientSessionsAdapter = require('@gf-apis/client-sessions-adapter')
+const ClientSessionsAdapter = require('@gfa/client-sessions-adapter')
 
 module.exports = ClientSessionsAdapter

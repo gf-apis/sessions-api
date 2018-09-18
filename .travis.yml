@@ -1,0 +1,33 @@
+cache:
+  directories:
+  - $HOME/google-cloud-sdk
+
+env:
+  global:
+  - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+  - CLOUDSDK_CORE_PROJECT=test
+
+before_install:
+- if [ ! -d $HOME/google-cloud-sdk/bin ]; then
+    rm -rf $HOME/google-cloud-sdk;
+    curl https://sdk.cloud.google.com | bash > /dev/null;
+  fi
+- source $HOME/google-cloud-sdk/path.bash.inc
+- gcloud components update beta
+- gcloud components update cloud-datastore-emulator
+- gcloud version
+
+before_script:
+- gcloud beta emulators datastore start --consistency 1.0 --no-store-on-disk &
+- sleep 3
+- $(gcloud beta emulators datastore env-init)
+
+language: node_js
+node_js:
+  - "8"
+
+jobs:
+  include:
+    - stage: test
+      node_js: "8"
+      script: npm test && npm run coverage

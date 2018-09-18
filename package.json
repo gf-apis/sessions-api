@@ -1,31 +1,33 @@
 {
-  "name": "@gf-apis/sessions-api",
+  "name": "@gfa/sessions-api",
   "version": "0.2.0",
   "description": "Opinionated sessions API for Google Functions",
   "main": "index.js",
   "scripts": {
-    "test": "standard --fix && nyc mocha"
+    "test": "standard --fix && nyc mocha",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gf-apis/sessions-api.git"
+    "url": "git+https://github.com/pauloddr/gfa-sessions-api.git"
   },
-  "author": "Panayotis Procopiou <gfapis@pauloddr.com>",
+  "author": "Panayotis Procopiou <gfa@pauloddr.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gf-apis/sessions-api/issues"
+    "url": "https://github.com/pauloddr/gfa-sessions-api/issues"
   },
-  "homepage": "https://github.com/gf-apis/sessions-api#readme",
+  "homepage": "https://github.com/pauloddr/gfa-sessions-api#readme",
   "dependencies": {
-    "@gf-apis/bcrypt-adapter": "github:gf-apis/bcrypt-adapter",
-    "@gf-apis/client-sessions-adapter": "github:gf-apis/client-sessions-adapter",
-    "@gf-apis/core": "github:gf-apis/core",
-    "@gf-apis/datastore-adapter": "github:gf-apis/datastore-adapter"
+    "@gfa/bcrypt-adapter": "github:pauloddr/gfa-bcrypt-adapter",
+    "@gfa/client-sessions-adapter": "github:pauloddr/gfa-client-sessions-adapter",
+    "@gfa/core": "github:pauloddr/gfa-core",
+    "@gfa/datastore-adapter": "github:pauloddr/gfa-datastore-adapter"
   },
   "devDependencies": {
     "body-parser": "1.17.1",
     "chai": "3.5.0",
     "chai-http": "3.0.0",
+    "coveralls": "3.0.2",
     "dirty-chai": "2.0.1",
     "express": "4.15.2",
     "mocha": "3.3.0",

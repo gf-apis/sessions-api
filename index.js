@@ -1,11 +1,11 @@
 'use strict'
 
-const ClientSessionsAdapter = require('@gf-apis/client-sessions-adapter')
-const BcryptAdapter = require('@gf-apis/bcrypt-adapter')
-const DatastoreAdapter = require('@gf-apis/datastore-adapter')
+const ClientSessionsAdapter = require('@gfa/client-sessions-adapter')
+const BcryptAdapter = require('@gfa/bcrypt-adapter')
+const DatastoreAdapter = require('@gfa/datastore-adapter')
 
-const {SessionsApp} = require('@gf-apis/core/apps/SessionsApp')
-const {SessionsRouter} = require('@gf-apis/core/routers/SessionsRouter')
+const {SessionsApp} = require('@gfa/core/apps/SessionsApp')
+const {SessionsRouter} = require('@gfa/core/routers/SessionsRouter')
 
 class SessionsApi extends SessionsApp {
   constructor (opts) {
