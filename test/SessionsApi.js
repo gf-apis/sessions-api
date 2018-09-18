@@ -7,6 +7,8 @@ const SessionsApi = require('../')
 const {emulator, setApp} = require('@gfa/core/test/support/emulator')
 
 describe('SessionsApi', function () {
+  this.timeout(5000)
+
   let app = new SessionsApi({
     session: {secret: 'test', expose: ['id', 'username']}
   })
