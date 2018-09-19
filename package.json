@@ -24,7 +24,7 @@
     "@gfa/datastore-adapter": "github:pauloddr/gfa-datastore-adapter"
   },
   "devDependencies": {
-    "body-parser": "1.17.1",
+    "body-parser": "1.18.3",
     "chai": "3.5.0",
     "chai-http": "3.0.0",
     "coveralls": "3.0.2",
