@@ -1,9 +1,14 @@
+### THIS PROJECT HAS BEEN DISCONTINUED.
+
+Read more [here](https://github.com/pauloddr/gfa-guides/blob/master/README.md).
+
+Original README archived below.
+
+---
+
 # @gfa/sessions-api
 
-[![Build Status](https://travis-ci.com/pauloddr/gfa-sessions-api.svg?branch=master)](https://travis-ci.com/pauloddr/gfa-sessions-api)
-[![Coverage Status](https://coveralls.io/repos/github/pauloddr/gfa-sessions-api/badge.svg?branch=master)](https://coveralls.io/github/pauloddr/gfa-sessions-api?branch=master)
-
-A simple and opinionated session management API for [Google Cloud HTTP Functions](https://cloud.google.com/functions/docs/writing/http).
+This component allows creating a session management API using [Google Cloud HTTP Functions](https://cloud.google.com/functions/docs/writing/http).
 
 It relies on the following dependencies:
 
@@ -24,7 +29,7 @@ Create a new __Google Cloud Function__:
 3) In the inline editor, paste the following code:
 
 ```javascript
-const SessionsApi = require('@gfa/sessions-api')
+const SessionsApi = require('@gfa/sessions-ds')
 
 const api = new SessionsApi()
 
@@ -42,7 +47,7 @@ exports.handleRequest = function (req, res) {
   "name": "your-function",
   "version": "0.0.1",
   "dependencies": {
-    "@gfa/sessions-api": "github:pauloddr/gfa-sessions-api"
+    "@gfa/sessions-ds": "github:pauloddr/gfa-sessions-ds"
   }
 }
 ```
@@ -295,7 +300,7 @@ var api = new SessionsApi({
 
 ```javascript
 // Note the different class name and require path
-const Session = require('@gfa/sessions-api/session')
+const Session = require('@gfa/sessions-ds/session')
 
 // Create and configure this object with the same options
 //   as the "session" section of your /sessions function
